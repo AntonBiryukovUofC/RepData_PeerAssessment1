@@ -31,13 +31,24 @@ activity_list_2 <- activity_list %>% filter(!is.na(steps)) %>%  # Filter the NAs
   group_by(interval) %>% # Group by the interval
   summarize(StepsPerInt = mean(steps)) # Sum of the steps elements in each group
 
-# Before imputing values,
+
+# Before imputing values, show the histogram of the total steps per day
 p1 <- qplot(StepsPerDay,data = activity_list_1,geom = "histogram",bins = 20,main="Histogram of total steps per day")
+print(p1)
+
+#Show the median and the mean values of the steps taken per day
 Mean_Median <-as.data.frame(t(c(mean(activity_list_1$StepsPerDay),median(activity_list_1$StepsPerDay))))
 colnames(Mean_Median) <- c("Mean of steps per day","Median of steps per day")
-p2 <- qplot(interval,StepsPerInt,data = activity_list_2,geom="line",main=" Average # steps per interval")
 print(Mean_Median)
-grid.arrange(p1,p2,ncol=2)
+
+# Show the plot indicating the average number of steps per interval
+p2 <- qplot(interval,StepsPerInt,data = activity_list_2,geom="line",main=" Average # steps per interval")
+print(p2)
+
+# Which interval has the max steps per interval, and the value:
+interval_max_steps <- slice(activity_list_2,which.max(activity_list_2$interval))
+print(interval_max_steps)
+
 
 # Now impute the values: I will use the mean for the corresponding interval:
 activity_list_3 <- activity_list %>% mutate(steps = imputeNA(steps,interval,activity_list_2))
@@ -45,7 +56,7 @@ grouped_imputed  <- activity_list_3 %>%
   group_by(date) %>% # Group by the date
   summarize(StepsPerDay = sum(steps)) # Sum of the steps elements in each group
 p3 <- qplot(StepsPerDay,data = grouped_imputed,geom = "histogram",bins = 20,main="Histogram of total steps per day")
-
+ # Show the histograms before and after the imputing values
 grid.arrange(p1,p3,ncol=2)
 
 # Calculate the mean and the median numbers to see the change:
