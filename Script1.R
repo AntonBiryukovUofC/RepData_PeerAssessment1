@@ -46,7 +46,7 @@ p2 <- qplot(interval,StepsPerInt,data = activity_list_2,geom="line",main=" Avera
 print(p2)
 
 # Which interval has the max steps per interval, and the value:
-interval_max_steps <- slice(activity_list_2,which.max(activity_list_2$interval))
+interval_max_steps <- slice(activity_list_2,which.max(activity_list_2$StepsPerInt))
 print(interval_max_steps)
 
 
